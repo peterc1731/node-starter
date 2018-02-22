@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Node Starter</title>
+    <meta name="description" content="Node Starter">
+    <meta name="author" content="Peter Carpenter">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="http://localhost:3000/css/styles.css">
+</head>
+<body>
+    <div id="app-home">
+        <div class="container" v-cloak>
+            <div class="navbar">
+                <div class="nav-left">
+                    <a href="/home" id="home">Home</a>
+                </div>
+                <div class="nav-right">
+                    <ul>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="nav-bottom"></div>
+            <div class="login" v-if="username">
+                <h1>Welcome {{ username }}</h1>
+                <div class="message">
+                    <p>You are logged in. Click <a href="#" @click.prevent="logout">here</a> to logout.</p>
+                </div>
+            </div>
+            <div class="login" v-else>
+                <h1>Welcome New User</h1>
+                <div class="message">
+                    <p>You are not logged in. Please login or register.</p>
+                </div>
+            </div>
+        </div>  
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script
+        src="http://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="http://localhost:3000/js/home.js"></script>
+    
+</body>
+</html>
