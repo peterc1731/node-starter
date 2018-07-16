@@ -1,0 +1,7 @@
+{
+    "mongodb": {
+        "url": "mongodb://test:test_1234@ds139841.mlab.com:39841/node-starter-test"
+    },
+    "secret": "supersecretcode",
+    "baseUrl": "/api" 
+}

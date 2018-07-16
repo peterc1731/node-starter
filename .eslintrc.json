@@ -1,0 +1,10 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+        "no-underscore-dangle": ["off"]
+    },
+    "env": {
+        "mocha": true,
+        "node": true
+    }
+}

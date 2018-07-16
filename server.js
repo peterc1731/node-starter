@@ -1,22 +1,31 @@
-var express = require('express'),
-    mongoose = require('mongoose'),
-    routes = require('./api/routes/routes'),
-    userModel = require('./api/models/User'),
-    bodyParser = require('body-parser'),
-    app = express(),
-    port = process.env.PORT || 3000
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const routes = require('./api/routes/routes');
+const log = require('./api/utils/logger');
+const config = require('./config.json');
 
-//mongoose instance connection
-mongoose.Promise = global.Promise
-mongoose.connect('mongodb://localhost/Auth')
+const app = express();
+const port = process.env.PORT || config.port || 3000;
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+module.exports = app;
 
-app.use(express.static('public'))
+log.title('Node API Starter');
 
-routes(app)
+mongoose.Promise = global.Promise;
+mongoose.connect(config.mongodb.url, { useNewUrlParser: true })
+  .then(() => {
+    log.message(`MongoDB connected @ ${config.mongodb.url}`);
 
-app.listen(port)
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
 
-console.log('RESTful API server started on: ' + port)
+    routes(app);
+
+    app.listen(port);
+
+    log.message(`Server started on port ${port}`);
+  }).catch((err) => {
+    log.error('Error starting server');
+    log.error(err);
+  });

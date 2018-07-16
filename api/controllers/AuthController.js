@@ -1,43 +1,52 @@
-var User = require('../models/User'),
-    jwt = require('jsonwebtoken'),
-    bcrypt = require('bcryptjs'),
-    config = require('../../config'),
-    mongoose = require('mongoose')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../../config.json');
+const User = require('../models/User');
 
-exports.register_a_new_user = function (req, res) {
-    var hashedPassword = bcrypt.hashSync(req.body.password, 8)
-    var new_user = new User({
-        name : req.body.name,
-        email : req.body.email,
-        password : hashedPassword
-    })
-    new_user.save(function (err, user) {
-        if (err) return res.status(500).send(err)
-        res.json({ success: true, message: "User " + req.body.name + " successfully created" })
-    });
-}
+exports.register_a_new_user = (req, res) => {
+  if (!req.body.name || !req.body.email || !req.body.password) {
+    return res.status(400).json({ success: false, message: 'Invalid user data' });
+  }
+  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  return new User({
+    name: req.body.name,
+    email: req.body.email,
+    password: hashedPassword,
+  }).save()
+    .then(user => res.status(200).json({ success: true, message: `User ${user.name} successfully created` }))
+    .catch(error => res.status(500).json({ success: false, error }));
+};
 
-exports.get_user_from_token = function (req, res) {
-    User.findById(req.userId, { password: 0 }, function (err, user) {
-        if (err) return res.status(500).send("There was a problem finding the user.")
-        if (!user) return res.status(404).send("User not found.")
-        res.send(user)
-    })
-}
+exports.get_user_from_token = (req, res) => User.findOne({ name: req.locals.userId },
+  { password: 0 })
+  .then((user) => {
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    return res.status(200).json({ success: true, user });
+  })
+  .catch(error => res.status(500).json({ success: false, error }));
 
-exports.login_an_existing_user = function (req, res) {
-    User.findOne({ email: req.body.email }, function (err, user) {
-        if (err) return res.status(500).send('Error on the server.')
-        if (!user) return res.status(404).send('No user found.')
-        var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-        var token = jwt.sign({ id: user._id }, config.secret, {
-            expiresIn: 86400 // expires in 24 hours
-        });
-        res.send({ auth: true, token: token });
-    })
-}
+exports.login_an_existing_user = (req, res) => User.findOne({ email: req.body.email })
+  .then((user) => {
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+    if (!passwordIsValid) return res.status(401).json({ success: false, token: null });
+    const token = jwt.sign({ id: user._id }, config.secret, { expiresIn: 86400 });
+    return res.status(200).json({ success: true, token });
+  })
+  .catch(error => res.status(500).json({ success: false, error }));
 
-exports.logout_a_user = function (req, res) {
-    res.send({ auth: false, token: null })
-}
+exports.logout_a_user = (req, res) => User.findOne({ name: req.locals.userId },
+  { password: 0 })
+  .then((user) => {
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    return res.status(200).json({ success: true, token: null });
+  })
+  .catch(error => res.status(500).json({ success: false, error }));
+
+exports.unregister_a_user = (req, res) => User.findOne({ name: req.locals.userId }, { password: 0 })
+  .then((user) => {
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    return User.findByIdAndRemove(user._id)
+      .then(() => res.status(200).json({ success: true, message: 'User successfully removed' }));
+  })
+  .catch(error => res.status(500).json({ success: false, error }));
