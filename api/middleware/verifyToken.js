@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
       });
     }
 
-    req.locals.userId = decoded.id;
+    req.locals.user = decoded.id;
     return next();
   });
 };

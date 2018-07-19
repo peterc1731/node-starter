@@ -18,7 +18,7 @@ exports.register_a_new_user = (req, res) => {
 };
 
 exports.get_user_from_token = (req, res) => User.findOne(
-  { name: req.locals.userId },
+  { name: req.locals.user },
   { password: 0 },
 )
   .then((user) => {
@@ -32,13 +32,13 @@ exports.login_an_existing_user = (req, res) => User.findOne({ email: req.body.em
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) return res.status(401).json({ success: false, token: null });
-    const token = jwt.sign({ id: user._id }, config.secret, { expiresIn: 86400 });
+    const token = jwt.sign({ id: user.name }, config.secret, { expiresIn: 86400 });
     return res.status(200).json({ success: true, token });
   })
   .catch(error => res.status(500).json({ success: false, error }));
 
 exports.logout_a_user = (req, res) => User.findOne(
-  { name: req.locals.userId },
+  { name: req.locals.user },
   { password: 0 },
 )
   .then((user) => {
@@ -48,7 +48,7 @@ exports.logout_a_user = (req, res) => User.findOne(
   .catch(error => res.status(500).json({ success: false, error }));
 
 exports.unregister_a_user = (req, res) => User.findOne(
-  { name: req.locals.userId },
+  { name: req.locals.user },
   { password: 0 },
 )
   .then((user) => {
