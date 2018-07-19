@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../../config.json');
+const config = require('../../config');
 const User = require('../models/User');
 
 exports.register_a_new_user = (req, res) => {
@@ -32,7 +32,11 @@ exports.login_an_existing_user = (req, res) => User.findOne({ email: req.body.em
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) return res.status(401).json({ success: false, token: null });
-    const token = jwt.sign({ id: user.name }, config.secret, { expiresIn: 86400 });
+    const token = jwt.sign(
+      { id: user.name },
+      config.token.secret,
+      { expiresIn: config.token.lifetime },
+    );
     return res.status(200).json({ success: true, token });
   })
   .catch(error => res.status(500).json({ success: false, error }));

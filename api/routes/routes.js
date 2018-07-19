@@ -2,7 +2,7 @@ const userController = require('../controllers/PostController');
 const authController = require('../controllers/AuthController');
 const verifyToken = require('../middleware/verifyToken');
 
-const { baseUrl } = require('../../config.json');
+const { baseUrl } = require('../../config');
 
 module.exports = (app) => {
   app.route(`${baseUrl}/posts`)

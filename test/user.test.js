@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../api/server');
-const config = require('../config.json');
+const config = require('../config');
 const User = require('../api/models/User');
 const helpers = require('./helpers');
 
