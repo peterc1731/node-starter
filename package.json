@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "mocha --exit ./test/index.js",
-    "coverage": "nyc --check-coverage --lines 90 mocha --exit ./test/index.js",
+    "coverage": "nyc --reporter=text --reporter=html --check-coverage --lines 90 mocha --exit ./test/index.js",
     "start-dev": "nodemon server.js",
     "start": "node server.js"
   },

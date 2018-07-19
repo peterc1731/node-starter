@@ -58,3 +58,6 @@ At the root of the project `config.js` contains all the environment specific var
 
 ### Tests
 
+The API is accompanied by a comprehensive suite of tests, that can be run using `npm test`. These integration tests are written using [mocha](https://mochajs.org/), [chai](http://www.chaijs.com/) and [supertest](https://github.com/visionmedia/supertest) to make requests to all the routes available on the API and expect specific responses.
+
+Test coverage can be viewed in the terminal using `npm run coverage`, this also generates a html coverage report at `/coverage` to easily view any uncovered lines/functions/branches.

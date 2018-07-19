@@ -1,3 +1,5 @@
 node_modules
 env.sh
 .nyc_output
+coverage
+.DS_Store
