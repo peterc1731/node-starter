@@ -17,8 +17,10 @@ exports.register_a_new_user = (req, res) => {
     .catch(error => res.status(500).json({ success: false, error }));
 };
 
-exports.get_user_from_token = (req, res) => User.findOne({ name: req.locals.userId },
-  { password: 0 })
+exports.get_user_from_token = (req, res) => User.findOne(
+  { name: req.locals.userId },
+  { password: 0 },
+)
   .then((user) => {
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     return res.status(200).json({ success: true, user });
@@ -35,15 +37,20 @@ exports.login_an_existing_user = (req, res) => User.findOne({ email: req.body.em
   })
   .catch(error => res.status(500).json({ success: false, error }));
 
-exports.logout_a_user = (req, res) => User.findOne({ name: req.locals.userId },
-  { password: 0 })
+exports.logout_a_user = (req, res) => User.findOne(
+  { name: req.locals.userId },
+  { password: 0 },
+)
   .then((user) => {
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     return res.status(200).json({ success: true, token: null });
   })
   .catch(error => res.status(500).json({ success: false, error }));
 
-exports.unregister_a_user = (req, res) => User.findOne({ name: req.locals.userId }, { password: 0 })
+exports.unregister_a_user = (req, res) => User.findOne(
+  { name: req.locals.userId },
+  { password: 0 },
+)
   .then((user) => {
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
     return User.findByIdAndRemove(user._id)
