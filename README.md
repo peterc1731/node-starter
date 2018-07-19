@@ -54,4 +54,4 @@ At the root of the project `config.js` contains all the environment specific var
 - `mongodb.url` - MongoDB connection string.
 - `token.secret` - Secret used to encrypt and verify JWTs, must be stored on the server and kept hidden. If this secret is changed, all currently distributed tokens will be invalidated.
 - `token.lifetime` - Lifetime in seconds of any distributed JWT.
-- `baseUrl` - Path at the beginning of all API routes e.g. http://yourdomain.com/baseUrl/register.
+- `baseUrl` - Path at the beginning of all API routes e.g. http://yourdomain.com/{baseUrl}/register.
