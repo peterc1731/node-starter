@@ -14,9 +14,13 @@ const testUser = 'test';
 
 describe('User Integration Tests', () => {
   before((done) => {
-    mongoose.connection.once('open', () => {
-      setTimeout(done, 100);
-    });
+    if (!(mongoose.connection.readyState === 1)) {
+      mongoose.connection.once('open', () => {
+        setTimeout(done, 100);
+      });
+    } else {
+      done();
+    }
   });
 
   after(() => User.remove({}));

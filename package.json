@@ -6,8 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "mocha --exit",
-    "coverage": "nyc mocha --exit",
+    "test": "mocha --exit ./test/index.js",
+    "coverage": "nyc --check-coverage --lines 90 mocha --exit ./test/index.js",
     "start-dev": "nodemon server.js",
     "start": "node server.js"
   },
@@ -30,5 +30,14 @@
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.2.3"
+  },
+  "nyc": {
+    "exclude": [
+      "api/utils/logger.js",
+      "api/server.js",
+      "config.js",
+      "**/*.spec.js",
+      "**/*.test.js"
+    ]
   }
 }
